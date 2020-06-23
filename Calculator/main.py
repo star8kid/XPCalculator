@@ -51,6 +51,9 @@ class StartApp():
     def openFeatureWindow(self, window_referance):
         window_referance.deiconify()
         window_referance.mainloop()
+    def openMenuWindow(self):
+        self.root.deiconify()
+        self.root.mainloop()
 
 
 
@@ -74,7 +77,29 @@ class FromLevelZero():
 
         self.targetLevel = StringVar()
         self.totalNeededXPNum = StringVar()
+        self.inputLabel = ttk.Label(self.feature_frame, text = "Input the target level you're trying to reach: ")
+        self.inputLabel.grid( row = 2 , column = 0)
+        self.outputLabel = ttk.Label(self.feature_frame, text = "The amount of experience needed to reach that level is: ")
+        self.outputLabel.grid( row = 3, column = 0)
+        self.levelEntry = ttk.Entry(self.feature_frame, width = 15 , textvariable = self.targetLevel)
+        self.levelEntry.grid( row = 2 , column = 1)
 
+
+
+    def lvlZeroCalculate(self,targetLevel):
+        neededExp = 0
+        if(targetLevel >= 0 and targetLevel <= 16):
+            neededExp = (targetLevel ** 2) + (targetLevel * 6)
+            return neededExp
+        elif(targetLevel >= 17 and targetLevel <= 31):
+            neededExp = (((targetLevel ** 2) * 2.5) - (targetLevel * 40.5)) + 360
+            return neededExp
+        elif(targetLevel >= 32):
+            neededExp = (((targetLevel ** 2) * 4.5) - (targetLevel * 162.5)) + 2220
+            return neededExp
+       
+    
+# Figure out how to do the calculation function for this feature
         
 
 
