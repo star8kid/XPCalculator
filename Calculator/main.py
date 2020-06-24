@@ -83,20 +83,30 @@ class FromLevelZero():
         self.outputLabel.grid( row = 3, column = 0)
         self.levelEntry = ttk.Entry(self.feature_frame, width = 15 , textvariable = self.targetLevel)
         self.levelEntry.grid( row = 2 , column = 1)
+        self.neededExpLabel = ttk.Label(self.feature_frame, textvariable = self.totalNeededXPNum)
+        self.neededExpLabel.grid( row = 3, column = 1)
+        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", command = self.lvlZeroCalculate)
+        self.calcButton.grid( row = 4 , column = 1)
 
 
+    #Figure out how to set the calculated number into the label!!!!!!!!!!!
 
-    def lvlZeroCalculate(self,targetLevel):
-        neededExp = 0
-        if(targetLevel >= 0 and targetLevel <= 16):
-            neededExp = (targetLevel ** 2) + (targetLevel * 6)
-            return neededExp
-        elif(targetLevel >= 17 and targetLevel <= 31):
-            neededExp = (((targetLevel ** 2) * 2.5) - (targetLevel * 40.5)) + 360
-            return neededExp
-        elif(targetLevel >= 32):
-            neededExp = (((targetLevel ** 2) * 4.5) - (targetLevel * 162.5)) + 2220
-            return neededExp
+    def lvlZeroCalculate(self,*args):
+        try:
+            target = float(self.levelEntry.get())
+            neededExp = 0
+            if(target >= 0 and target <= 16):
+                neededExp = (target ** 2) + (target * 6)
+                self.totalNeededXPNum.set(neededExp)
+            elif(target >= 17 and target <= 31):
+                neededExp = (((target ** 2) * 2.5) - (target * 40.5)) + 360
+                self.totalNeededXPNum.set(neededExp)
+            elif(target>= 32):
+                neededExp = (((target ** 2) * 4.5) - (target * 162.5)) + 2220
+                self.totalNeededXPNum.set(neededExp)
+        except ValueError:
+            print("Please input a correct value!")
+            pass
        
     
 # Figure out how to do the calculation function for this feature
@@ -122,6 +132,8 @@ if __name__ == "__main__":
 
     app.menuButton1.config( text = feature1.feature_title, command = lambda : app.openFeatureWindow(feature1.root) )
 
+
+    feature1.root.bind('<Return>',feature1.lvlZeroCalculate)
 
 
     #Start of the app
