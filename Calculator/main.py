@@ -77,6 +77,7 @@ class FromLevelZero():
 
         self.targetLevel = StringVar()
         self.totalNeededXPNum = StringVar()
+        self.totalNeededXPNum.set("Please woooork.")
 
      
         self.inputLabel = ttk.Label(self.feature_frame, text = "Input the target level you're trying to reach: ")
@@ -97,7 +98,7 @@ class FromLevelZero():
     def lvlZeroSet(self):
         try: 
             print("This func has been called!!\n")
-            self.totalNeededXPNum.set("I can display things!")
+            self.totalNeededXPNum.set("Updated Text: I can display things!")
             #print("The total amount of exp you've entered is " + self.totalNeededXPNum.get() + "\n")
         except ValueError:
             print("Please input a valid value!!")
