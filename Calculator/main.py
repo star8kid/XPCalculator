@@ -77,6 +77,8 @@ class FromLevelZero():
 
         self.targetLevel = StringVar()
         self.totalNeededXPNum = StringVar()
+
+     
         self.inputLabel = ttk.Label(self.feature_frame, text = "Input the target level you're trying to reach: ")
         self.inputLabel.grid( row = 2 , column = 0)
         self.outputLabel = ttk.Label(self.feature_frame, text = "The amount of experience needed to reach that level is: ")
@@ -85,25 +87,39 @@ class FromLevelZero():
         self.levelEntry.grid( row = 2 , column = 1)
         self.neededExpLabel = ttk.Label(self.feature_frame, textvariable = self.totalNeededXPNum)
         self.neededExpLabel.grid( row = 3, column = 1)
-        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", command = self.lvlZeroCalculate)
+        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", command = self.lvlZeroSet)
         self.calcButton.grid( row = 4 , column = 1)
+      
+
 
 
     #Figure out how to set the calculated number into the label!!!!!!!!!!!
+    def lvlZeroSet(self):
+        try: 
+            print("This func has been called!!\n")
+            self.totalNeededXPNum.set("I can display things!")
+            #print("The total amount of exp you've entered is " + self.totalNeededXPNum.get() + "\n")
+        except ValueError:
+            print("Please input a valid value!!")
+            pass
 
-    def lvlZeroCalculate(self,*args):
+    def lvlZeroCalculate(self):
         try:
             target = float(self.levelEntry.get())
             neededExp = 0
             if(target >= 0 and target <= 16):
                 neededExp = (target ** 2) + (target * 6)
-                self.totalNeededXPNum.set(neededExp)
+                self.totalNeededXPNum.set(str(neededExp))
+                print("The amount of exp needed is " + self.totalNeededXPNum.get() + "\n")
+                return self.totalNeededXPNum
             elif(target >= 17 and target <= 31):
                 neededExp = (((target ** 2) * 2.5) - (target * 40.5)) + 360
-                self.totalNeededXPNum.set(neededExp)
+                self.totalNeededXPNum.set(str(neededExp))
+                return self.totalNeededXPNum
             elif(target>= 32):
                 neededExp = (((target ** 2) * 4.5) - (target * 162.5)) + 2220
-                self.totalNeededXPNum.set(neededExp)
+                self.totalNeededXPNum.set(str(neededExp))
+                return self.totalNeededXPNum
         except ValueError:
             print("Please input a correct value!")
             pass
@@ -133,7 +149,7 @@ if __name__ == "__main__":
     app.menuButton1.config( text = feature1.feature_title, command = lambda : app.openFeatureWindow(feature1.root) )
 
 
-    feature1.root.bind('<Return>',feature1.lvlZeroCalculate)
+    feature1.root.bind('<Return>', feature1.lvlZeroSet)
 
 
     #Start of the app
