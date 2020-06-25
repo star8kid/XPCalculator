@@ -54,6 +54,10 @@ class StartApp():
     def openMenuWindow(self):
         self.root.deiconify()
         self.root.mainloop()
+    def closeFeatureWindow(self, window_referance):
+        window_referance.withdraw()
+    def closeMenuWindow(self):
+        self.root.withdraw()
 
 
 
@@ -61,68 +65,55 @@ class FromLevelZero():
     def __init__(self, feature_title):
 
         self.feature_title = feature_title
-        self.root = Tk()
+        self.featureWindow = Toplevel()
     
-        self.title_frame = ttk.Frame(self.root, padding = "50 10 50 10")
-        self.feature1_font = font.Font( family = "Times New Roman", size = 12 , weight = "bold")
-        self.title_label = ttk.Label(self.title_frame, text = "From Level Zero", font = self.feature1_font, padding = "40 50 40 100")
+        self.title_frame = ttk.Frame(self.featureWindow, padding = "50 10 50 0")
+        self.feature1_font = font.Font( family = "System", size = 22 , weight = "bold")
+        self.title_label = ttk.Label(self.title_frame, text = "From Level Zero", font = self.feature1_font, padding = "40 50 40 40")
         self.title_label.grid( row = 1 , column = 1)
         self.title_frame.pack()
 
 
         # For this feature of the program, the software will allow an input of
         # a single level integer and calculate the amount of experience required to reach that level from level 0
-        self.feature_frame = ttk.Frame(self.root, padding = "10 10 10 10")
+        self.feature_frame = ttk.Frame(self.featureWindow, padding = "10 10 10 10")
         self.feature_frame.pack()
 
         self.targetLevel = StringVar()
         self.totalNeededXPNum = StringVar()
-        self.totalNeededXPNum.set("Please woooork.")
+
 
      
         self.inputLabel = ttk.Label(self.feature_frame, text = "Input the target level you're trying to reach: ")
-        self.inputLabel.grid( row = 2 , column = 0)
+        self.inputLabel.grid( row = 2 , column = 0, sticky = (E))
         self.outputLabel = ttk.Label(self.feature_frame, text = "The amount of experience needed to reach that level is: ")
         self.outputLabel.grid( row = 3, column = 0)
-        self.levelEntry = ttk.Entry(self.feature_frame, width = 15 , textvariable = self.targetLevel)
+        self.levelEntry = ttk.Entry(self.feature_frame, width = 25 , textvariable = self.targetLevel)
         self.levelEntry.grid( row = 2 , column = 1)
-        self.neededExpLabel = ttk.Label(self.feature_frame, textvariable = self.totalNeededXPNum)
-        self.neededExpLabel.grid( row = 3, column = 1)
-        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", command = self.lvlZeroSet)
+        self.neededExpLabel = ttk.Label(self.feature_frame, textvariable = self.totalNeededXPNum, )
+        self.neededExpLabel.grid( row = 3, column = 1, sticky = (W,E))
+        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", command = self.lvlZeroCalculate)
         self.calcButton.grid( row = 4 , column = 1)
+        self.backStyle = ttk.Style()
+        self.backStyle.configure("Back.TButton", foreground = "systemHighlight")
+        self.backButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", style = "Back.TButton")
+        self.backButton.grid( row = 4, column = 0 , sticky = (W,E))
       
-
-
-
-    #Figure out how to set the calculated number into the label!!!!!!!!!!!
-    def lvlZeroSet(self):
-        try: 
-            print("This func has been called!!\n")
-            self.totalNeededXPNum.set("Updated Text: I can display things!")
-            #print("The total amount of exp you've entered is " + self.totalNeededXPNum.get() + "\n")
-        except ValueError:
-            print("Please input a valid value!!")
-            pass
-
     def lvlZeroCalculate(self):
         try:
             target = float(self.levelEntry.get())
             neededExp = 0
             if(target >= 0 and target <= 16):
-                neededExp = (target ** 2) + (target * 6)
+                neededExp = int((target ** 2) + (target * 6))
                 self.totalNeededXPNum.set(str(neededExp))
-                print("The amount of exp needed is " + self.totalNeededXPNum.get() + "\n")
-                return self.totalNeededXPNum
             elif(target >= 17 and target <= 31):
-                neededExp = (((target ** 2) * 2.5) - (target * 40.5)) + 360
+                neededExp = int((((target ** 2) * 2.5) - (target * 40.5)) + 360)
                 self.totalNeededXPNum.set(str(neededExp))
-                return self.totalNeededXPNum
             elif(target>= 32):
-                neededExp = (((target ** 2) * 4.5) - (target * 162.5)) + 2220
+                neededExp = int((((target ** 2) * 4.5) - (target * 162.5)) + 2220)
                 self.totalNeededXPNum.set(str(neededExp))
-                return self.totalNeededXPNum
         except ValueError:
-            print("Please input a correct value!")
+            self.totalNeededXPNum.set("Please input a correct value!")
             pass
        
     
@@ -141,16 +132,17 @@ if __name__ == "__main__":
     #App initialization
     app = StartApp()
     feature1 = FromLevelZero("Calculate From Level Zero")
-    feature1.root.withdraw()
+    feature1.featureWindow.withdraw()
 
     #Window Configurations
     app.root.title("XPCalculator")
-    feature1.root.title(feature1.feature_title)
+    feature1.featureWindow.title(feature1.feature_title)
 
-    app.menuButton1.config( text = feature1.feature_title, command = lambda : app.openFeatureWindow(feature1.root) )
+    app.menuButton1.config( text = feature1.feature_title, command = lambda : app.openFeatureWindow(feature1.featureWindow) )
 
 
-    feature1.root.bind('<Return>', feature1.lvlZeroSet)
+    #feature1.backButton( command = lambda : ap)
+    feature1.featureWindow.bind('<Return>', feature1.lvlZeroCalculate)
 
 
     #Start of the app
