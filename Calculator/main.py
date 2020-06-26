@@ -21,13 +21,14 @@ class StartApp():
         self.title_label.grid(row = 0 , column = 1)
 
         self.padVerticalValue = 3
-        self.menuButton1 = ttk.Button(self.menu_window)
+        self.menuButtonWidth = 35
+        self.menuButton1 = ttk.Button(self.menu_window, width = self.menuButtonWidth)
         self.menuButton1.grid( row = 1 , column = 1 , pady = self.padVerticalValue)
-        self.menuButton2 = ttk.Button(self.menu_window)
+        self.menuButton2 = ttk.Button(self.menu_window, width = self.menuButtonWidth)
         self.menuButton2.grid( row = 2 , column = 1 , pady = self.padVerticalValue)
-        self.menuButton3 = ttk.Button(self.menu_window)
+        self.menuButton3 = ttk.Button(self.menu_window, width = self.menuButtonWidth)
         self.menuButton3.grid( row = 3 , column = 1 , pady = self.padVerticalValue)
-        self.menuQuit = ttk.Button(self.menu_window)
+        self.menuQuit = ttk.Button(self.menu_window, width = self.menuButtonWidth)
         self.menuQuit.grid( row = 4, column = 1 , pady = self.padVerticalValue)
 
 
@@ -48,16 +49,13 @@ class StartApp():
         self.menu_window.pack()
     # 3. The method definitions/configurations
 
-    def openFeatureWindow(self, window_referance):
-        window_referance.deiconify()
-        window_referance.mainloop()
-    def openMenuWindow(self):
-        self.root.deiconify()
-        self.root.mainloop()
-    def closeFeatureWindow(self, window_referance):
-        window_referance.withdraw()
-    def closeMenuWindow(self):
+    def switchToNew(self,window_referance):
         self.root.withdraw()
+        window_referance.deiconify()
+    def switchBackMenu(self,window_referance):
+        window_referance.withdraw()
+        self.root.deiconify()
+
 
 
 
@@ -115,12 +113,43 @@ class FromLevelZero():
         except ValueError:
             self.totalNeededXPNum.set("Please input a correct value!")
             pass
-       
+
+
+class GrindDuration():
+    def __init__ (self,feature_title):
+
+        self.feature_title = feature_title
+        self.featureWindow = Toplevel()
     
-# Figure out how to do the calculation function for this feature
-        
+        self.title_frame = ttk.Frame(self.featureWindow, padding = "50 10 50 0")
+        self.feature2_font = font.Font( family = "System", size = 22 , weight = "bold")
+        self.title_label = ttk.Label(self.title_frame, text = "Grind Duration", font = self.feature2_font, padding = "40 50 40 40")
+        self.title_label.grid( row = 0 , column = 0)
+        self.title_frame.pack()
 
 
+
+        self.feature_frame = ttk.Frame(self.featureWindow)
+        self.feature_frame.pack()
+
+        self.currentLVL = StringVar()
+        self.targetLVL = StringVar()
+        self.expGainRATE = StringVar()
+
+
+        #Figure out weird programming bug here with the grid placement
+        self.currentLvlLabel = ttk.Label(self.feature_frame, text = "Your current level is :")
+        self.currentLvlLabel.grid( row = 1 , column = 0)
+        self.targetLvlLabel = ttk.Label(self.feature_frame, text = "The level you're trying to reach is :")
+        self.targetLvlLabel.grid( row = 2 , column = 0)
+        self.expGainRateLabel = ttk.Label(self.feature_frame, text = "The amount of exp you gain per second is :")
+        self.expGainRateLabel.grid( row = 3 , column = 0)
+        self.currentLvlEntry = ttk.Entry(self.feature_frame, textvariable = self.currentLVL)
+        self.currentLvlLabel.grid( row = 1, column = 1)
+        self.targetLvlEntry = ttk.Entry(self.feature_frame, textvariable = self.targetLVL)
+        self.targetLvlEntry.grid( row = 2 , column = 1)
+        self.expGainRateEntry = ttk.Entry(self.feature_frame, textvariable = self.expGainRATE)
+        self.expGainRateEntry.grid( row = 3 , column = 1)
 
         
 
@@ -132,14 +161,19 @@ if __name__ == "__main__":
     #App initialization
     app = StartApp()
     feature1 = FromLevelZero("Calculate From Level Zero")
-    feature1.featureWindow.withdraw()
+    feature2 = GrindDuration("Grind Duration")
 
+
+    feature1.featureWindow.withdraw()
+    feature2.featureWindow.withdraw()
     #Window Configurations
     app.root.title("XPCalculator")
     feature1.featureWindow.title(feature1.feature_title)
+    feature2.featureWindow.title(feature2.feature_title)
 
-    app.menuButton1.config( text = feature1.feature_title, command = lambda : app.openFeatureWindow(feature1.featureWindow) )
-
+    app.menuButton1.config( text = feature1.feature_title, command = lambda : app.switchToNew(feature1.featureWindow) )
+    app.menuButton2.config( text = feature2.feature_title, command = lambda : app.switchToNew(feature2.featureWindow))
+    feature1.backButton.config( command = lambda : app.switchBackMenu(feature1.featureWindow))
 
     #feature1.backButton( command = lambda : ap)
     feature1.featureWindow.bind('<Return>', feature1.lvlZeroCalculate)
