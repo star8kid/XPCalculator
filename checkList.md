@@ -6,5 +6,5 @@
 - [ ] Allow the feature to be run using the `<Return>` key on the keyboard
 - [ ] Make it so that when a button is pressed to go back to the main menu, that all of the entries are cleared.
 - [ ] Make the program close when the "X" button in the top left window of the root menu has been closed.
-- [ ] Make the Label displaying the Grind Duration have a custom style and font color
+- [x] Make the Label displaying the Grind Duration have a custom style and font color
 

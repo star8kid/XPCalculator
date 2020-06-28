@@ -121,7 +121,6 @@ class GrindDuration():
         self.minutesDuration = " "
 
 
-        #Figure out weird programming bug here with the grid placement
         self.currentLvlLabel = ttk.Label(self.feature_frame, text = "Your current level is: ")
         self.currentLvlLabel.grid( row = 0 , column = 0, sticky = (E))
         self.targetLvlLabel = ttk.Label(self.feature_frame, text = "The level you're trying to reach is: ")
@@ -135,9 +134,15 @@ class GrindDuration():
         self.expGainRateEntry = ttk.Entry(self.feature_frame, textvariable = self.expGainRATE)
         self.expGainRateEntry.grid( row = 2 , column = 1 )
         self.calculateButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20 ,command = self.grindDurationCalc)
-        self.calculateButton.grid(row = 3 , column = 1)
-        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 70)
-        self.fillerTextLabel.grid(row = 4 , column = 0 )
+        self.calculateButton.grid( row = 3 , column = 1)
+        self.fillerLabelStyle = ttk.Style()
+        self.fillerLabelStyle.configure("FillerInfo.TLabel", foreground = "green4")
+        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 70, style = "FillerInfo.TLabel")
+        self.fillerTextLabel.grid( row = 4 , column = 0 )
+        self.backMenuStyle = ttk.Style()
+        self.backMenuStyle.configure("Back.TButton", foreground = "systemHighlight")
+        self.menuBackButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", width = 20, style = "Back.TButton")
+        self.menuBackButton.grid( row = 5 , column = 1)
 
     def lvlZeroExpCalc(self, target):
         try:
@@ -165,12 +170,23 @@ class GrindDuration():
             if( grossSecondsDuration > 60 ):
                 grossMinutesDuration = grossSecondsDuration // 60
                 fineSecondsDuration = grossSecondsDuration % 60
-            self.secondsDuration = str(fineSecondsDuration)
-            self.minutesDuration = str(grossMinutesDuration)
-            self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.minutesDuration + " minutes and " + self.secondsDuration + " seconds!")
-
+                if( grossMinutesDuration < 0 or grossSecondsDuration < 0):
+                    raise TypeError
+                self.secondsDuration = str(fineSecondsDuration)
+                self.minutesDuration = str(grossMinutesDuration)
+                self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.minutesDuration + " minute(s) and " + self.secondsDuration + " second(s)!")
+            else:
+                if( grossMinutesDuration < 0 or grossSecondsDuration < 0):
+                    raise TypeError
+                self.secondsDuration = str(grossSecondsDuration)
+                self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.secondsDuration + " second(s)!")
         except ValueError:
+            #Work out weird possible value bugs, such as going to negative levels
             #WRITE CODE TO DISPLAY A VALUE ERROR HERE LATER!!
+            self.fillerTextLabel.configure( text = "Please input correct values!!")
+            pass
+        except TypeError:
+            self.fillerTextLabel.configure( text = "Put in numbers that fit within the level range logically!!")
             pass
 
 
@@ -189,10 +205,11 @@ if __name__ == "__main__":
     app.root.title("XPCalculator")
     feature1.featureWindow.title(feature1.feature_title)
     feature2.featureWindow.title(feature2.feature_title)
-    app.menuButton1.config( text = feature1.feature_title, command = lambda : app.switchToNew(feature1.featureWindow) )
+    app.menuButton1.config( text = feature1.feature_title, command = lambda : app.switchToNew(feature1.featureWindow))
     app.menuButton2.config( text = feature2.feature_title, command = lambda : app.switchToNew(feature2.featureWindow))
     feature1.backButton.config( command = lambda : app.switchBackMenu(feature1.featureWindow))
     feature1.featureWindow.bind('<Return>', feature1.lvlZeroCalculate)
+    feature2.menuBackButton.config( command = lambda : app.switchBackMenu(feature2.featureWindow))
 
     #Start of the app
     app.root.mainloop()
