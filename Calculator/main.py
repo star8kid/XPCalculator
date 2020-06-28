@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import font
 import time
+import math
 
 
 
@@ -117,6 +118,7 @@ class GrindDuration():
         self.targetLVL = StringVar()
         self.expGainRATE = StringVar()
         self.secondsDuration = " "
+        self.minutesDuration = " "
 
 
         #Figure out weird programming bug here with the grid placement
@@ -134,7 +136,7 @@ class GrindDuration():
         self.expGainRateEntry.grid( row = 2 , column = 1 )
         self.calculateButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20 ,command = self.grindDurationCalc)
         self.calculateButton.grid(row = 3 , column = 1)
-        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....")
+        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 70)
         self.fillerTextLabel.grid(row = 4 , column = 0 )
 
     def lvlZeroExpCalc(self, target):
@@ -159,10 +161,13 @@ class GrindDuration():
             target = float(self.targetLvlEntry.get())
             expRate = float(self.expGainRateEntry.get())
             expDifference = (self.lvlZeroExpCalc(target))  - (self.lvlZeroExpCalc(current))
-            grossSecondsDuration = (expDifference + 1) // expRate
-            print(grossSecondsDuration)
-            self.secondsDuration = str(grossSecondsDuration)
-            self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.secondsDuration + " seconds!")
+            grossSecondsDuration = math.floor((expDifference /expRate) + 1)
+            if( grossSecondsDuration > 60 ):
+                grossMinutesDuration = grossSecondsDuration // 60
+                fineSecondsDuration = grossSecondsDuration % 60
+            self.secondsDuration = str(fineSecondsDuration)
+            self.minutesDuration = str(grossMinutesDuration)
+            self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.minutesDuration + " minutes and " + self.secondsDuration + " seconds!")
 
         except ValueError:
             #WRITE CODE TO DISPLAY A VALUE ERROR HERE LATER!!
