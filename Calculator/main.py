@@ -78,10 +78,16 @@ class FromLevelZero():
         self.backStyle.configure("Back.TButton", foreground = "systemHighlight")
         self.backButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", style = "Back.TButton")
         self.backButton.grid( row = 4, column = 0 , sticky = (W,E))
+
+    def resetEntries(self):
+        self.targetLevel = " "
+        self.totalNeededXPNum = " "
       
     def lvlZeroCalculate(self):
         try:
             target = float(self.levelEntry.get())
+            if( target < 0):
+                raise ValueError
             neededExp = 0
             if(target >= 0 and target <= 16):
                 neededExp = int((target ** 2) + (target * 6))
@@ -137,12 +143,18 @@ class GrindDuration():
         self.calculateButton.grid( row = 3 , column = 1)
         self.fillerLabelStyle = ttk.Style()
         self.fillerLabelStyle.configure("FillerInfo.TLabel", foreground = "green4")
-        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 70, style = "FillerInfo.TLabel")
+        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 73, style = "FillerInfo.TLabel")
         self.fillerTextLabel.grid( row = 4 , column = 0 )
         self.backMenuStyle = ttk.Style()
         self.backMenuStyle.configure("Back.TButton", foreground = "systemHighlight")
         self.menuBackButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", width = 20, style = "Back.TButton")
         self.menuBackButton.grid( row = 5 , column = 1)
+
+    def resetEntries(self):
+        self.currentLVL = " "
+        self.targetLVL = " "
+        self.expGainRATE = " "
+        self.fillerTextLabel = "According to our calculations...."
 
     def lvlZeroExpCalc(self, target):
         try:
@@ -157,7 +169,6 @@ class GrindDuration():
                 neededExp = int((((target ** 2) * 4.5) - (target * 162.5)) + 2220)
                 return neededExp
         except ValueError:
-            #WRITE CODE TO DISPLAY A VALUE ERROR HERE LATER!!
             pass
 
     def grindDurationCalc(self):
@@ -165,25 +176,21 @@ class GrindDuration():
             current = float(self.currentLvlEntry.get())
             target = float(self.targetLvlEntry.get())
             expRate = float(self.expGainRateEntry.get())
+            if( current < 0 or target < 0 or expRate < 0):
+                raise TypeError
             expDifference = (self.lvlZeroExpCalc(target))  - (self.lvlZeroExpCalc(current))
             grossSecondsDuration = math.floor((expDifference /expRate) + 1)
             if( grossSecondsDuration > 60 ):
                 grossMinutesDuration = grossSecondsDuration // 60
                 fineSecondsDuration = grossSecondsDuration % 60
-                if( grossMinutesDuration < 0 or grossSecondsDuration < 0):
-                    raise TypeError
                 self.secondsDuration = str(fineSecondsDuration)
                 self.minutesDuration = str(grossMinutesDuration)
                 self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.minutesDuration + " minute(s) and " + self.secondsDuration + " second(s)!")
             else:
-                if( grossMinutesDuration < 0 or grossSecondsDuration < 0):
-                    raise TypeError
                 self.secondsDuration = str(grossSecondsDuration)
                 self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.secondsDuration + " second(s)!")
         except ValueError:
-            #Work out weird possible value bugs, such as going to negative levels
-            #WRITE CODE TO DISPLAY A VALUE ERROR HERE LATER!!
-            self.fillerTextLabel.configure( text = "Please input correct values!!")
+            self.fillerTextLabel.configure( text = "Please input correct numerical values!!")
             pass
         except TypeError:
             self.fillerTextLabel.configure( text = "Put in numbers that fit within the level range logically!!")
@@ -201,15 +208,25 @@ if __name__ == "__main__":
     feature1.featureWindow.withdraw()
     feature2.featureWindow.withdraw()
 
+    def switchBackAndClear(featureObject):
+        app.switchBackMenu(featureObject.featureWindow)
+        featureObject.resetEntries()
+
+    def testPublicFunction():
+        print("I have been run!!")
+
     #Window Configurations
     app.root.title("XPCalculator")
     feature1.featureWindow.title(feature1.feature_title)
     feature2.featureWindow.title(feature2.feature_title)
     app.menuButton1.config( text = feature1.feature_title, command = lambda : app.switchToNew(feature1.featureWindow))
     app.menuButton2.config( text = feature2.feature_title, command = lambda : app.switchToNew(feature2.featureWindow))
-    feature1.backButton.config( command = lambda : app.switchBackMenu(feature1.featureWindow))
-    feature1.featureWindow.bind('<Return>', feature1.lvlZeroCalculate)
-    feature2.menuBackButton.config( command = lambda : app.switchBackMenu(feature2.featureWindow))
+    app.menuButton3.config( text = "???")
+    feature1.backButton.config( command = lambda : switchBackAndClear(feature1))
+    feature2.menuBackButton.config( command = lambda : switchBackAndClear(feature2))
+
+    #Figure out how to bind roots and toplevel objects
+    app.root.bind('<Return>', testPublicFunction)
 
     #Start of the app
     app.root.mainloop()
