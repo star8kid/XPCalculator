@@ -14,7 +14,9 @@ class StartApp():
         self.root = Tk()
         self.menu_window = ttk.Frame(self.root, padding = "100 10 100 10")
         self.title_font = font.Font( family = "System", size = 18 , weight = "bold")
-        self.title_label = ttk.Label(self.menu_window, text = "XP Calculator", font = self.title_font, padding = "5 20 5 50")
+        self.title_style = ttk.Style()
+        self.title_style.configure("TitleLabel.TLabel", foreground = "ForestGreen")
+        self.title_label = ttk.Label(self.menu_window, text = "XP Calculator", style = "TitleLabel.TLabel", font = self.title_font, padding = "5 20 5 50")
         self.title_label.grid(row = 0 , column = 1)
 
         self.padVerticalValue = 3
@@ -52,6 +54,8 @@ class FromLevelZero():
 
         self.feature_title = feature_title
         self.featureWindow = Toplevel()
+        self.featureWindow.bind('<Return>' , self.lvlZeroCalculate)
+
     
         self.title_frame = ttk.Frame(self.featureWindow, padding = "50 10 50 0")
         self.feature1_font = font.Font( family = "System", size = 22 , weight = "bold")
@@ -79,11 +83,12 @@ class FromLevelZero():
         self.backButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", style = "Back.TButton")
         self.backButton.grid( row = 4, column = 0 , sticky = (W,E))
 
+
     def resetEntries(self):
         self.targetLevel = " "
         self.totalNeededXPNum = " "
       
-    def lvlZeroCalculate(self):
+    def lvlZeroCalculate(self, event = None):
         try:
             target = float(self.levelEntry.get())
             if( target < 0):
@@ -108,6 +113,7 @@ class GrindDuration():
 
         self.feature_title = feature_title
         self.featureWindow = Toplevel()
+        self.featureWindow.bind('<Return>', self.grindDurationCalc)
     
         self.title_frame = ttk.Frame(self.featureWindow, padding = "50 10 50 0")
         self.feature2_font = font.Font( family = "System", size = 22 , weight = "bold")
@@ -143,7 +149,7 @@ class GrindDuration():
         self.calculateButton.grid( row = 3 , column = 1)
         self.fillerLabelStyle = ttk.Style()
         self.fillerLabelStyle.configure("FillerInfo.TLabel", foreground = "green4")
-        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 73, style = "FillerInfo.TLabel")
+        self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 80, style = "FillerInfo.TLabel")
         self.fillerTextLabel.grid( row = 4 , column = 0 )
         self.backMenuStyle = ttk.Style()
         self.backMenuStyle.configure("Back.TButton", foreground = "systemHighlight")
@@ -154,7 +160,7 @@ class GrindDuration():
         self.currentLVL = " "
         self.targetLVL = " "
         self.expGainRATE = " "
-        self.fillerTextLabel = "According to our calculations...."
+        self.fillerTextLabel.config( text = "According to our calculations....")
 
     def lvlZeroExpCalc(self, target):
         try:
@@ -171,7 +177,7 @@ class GrindDuration():
         except ValueError:
             pass
 
-    def grindDurationCalc(self):
+    def grindDurationCalc(self, event = None):
         try:
             current = float(self.currentLvlEntry.get())
             target = float(self.targetLvlEntry.get())
@@ -212,8 +218,7 @@ if __name__ == "__main__":
         app.switchBackMenu(featureObject.featureWindow)
         featureObject.resetEntries()
 
-    def testPublicFunction():
-        print("I have been run!!")
+ 
 
     #Window Configurations
     app.root.title("XPCalculator")
@@ -226,7 +231,6 @@ if __name__ == "__main__":
     feature2.menuBackButton.config( command = lambda : switchBackAndClear(feature2))
 
     #Figure out how to bind roots and toplevel objects
-    app.root.bind('<Return>', testPublicFunction)
 
     #Start of the app
     app.root.mainloop()

@@ -15,5 +15,10 @@
 ```
     Average Exp Gain = Total Amount of Exp Earned / Amount of Seconds that passed
 ```
+- **Ever wonder how many exp bottle you'll need to take you to another level?** `XP Bottle Counter` is a feature that will take your current level and a target level and calculate how many Bottles o' Enchanting that you would need to reach the target level. *Note:*Bottles o' Enchanting experience worth 3 to 11 points, meaning that there is a range that a single Bottle o' Enchanting can dispense. Because of this there will be three calculations:
+
+    - `Maximum Amount`: This is the amount of exp bottles that are required if you want to ***guarantee*** that you'll reach the target level. Because you want to be sure you'll reach the target, this number will always be the highest of the three.
+    - `Average Amount`: This is the amount of exp bottles that you should be *expected* to accquire to reach the target level. However, there is no ***guarantee*** that you'll reach the target with the `Average Amount` of exp bottles, but if you want to risk it a little bit, this is the amount you'll need. 
+    - `Minimum Amount`: This is the amount of exp bottles that you would need if each bottle gave the ***maximum*** amount of exp every smash. There is *no* reason to think you'd need this few amount of bottles, however, if you're willing to risk it, this is the smallest amount you *possibly* could get away with.
 
 
