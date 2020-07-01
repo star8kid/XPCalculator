@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import font
 import time
 import math
+from PIL import ImageTk, Image
 
 
 
@@ -202,6 +203,67 @@ class GrindDuration():
             self.fillerTextLabel.configure( text = "Put in numbers that fit within the level range logically!!")
             pass
 
+class BottleCounter():
+    def __init__(self, feature_title):
+        self.feature_title = feature_title
+        self.featureWindow = Toplevel()
+        #Place binding key here
+
+        self.title_frame = ttk.Frame(self.featureWindow, padding = "50 10 50 0")
+        self.feature3_font = font.Font( family = "System", size = 22 , weight = "bold")
+        self.title_label = ttk.Label(self.title_frame, text = "Bottle Counter", font = self.feature3_font, padding = "40 50 40 40")
+        self.title_label.grid( row = 1 , column = 1)
+        self.title_frame.pack()
+        bottleOfEnchantingGIF = Image.open('C:/Users/Anthony/workspace/code_workspace/Python/XPCalculator/Images&Media/Bottle_Of_EnchantingGIF.gif')
+        self.title_image = ImageTk.PhotoImage(bottleOfEnchantingGIF)
+        self.image_label = Label(self.featureWindow, image = self.title_image)
+        self.image_label.pack()
+
+        self.feature_frame = ttk.Frame(self.featureWindow, padding = "20 20 20 20")
+        self.feature_frame.pack()
+
+        self.currentLVL = StringVar()
+        self.targetLVL = StringVar()
+        self.maximumAmountNum = " "
+        self.averageAmountNum = " "
+        self.minimumAmountNum = " "
+
+        self.currentLevelLabel = ttk.Label(self.feature_frame, text = "Your current level is: ")
+        self.currentLevelLabel.grid( row = 0 , column = 0, sticky = (E))
+        self.currentLevelEntry = ttk.Entry(self.feature_frame, textvariable = self.currentLVL)
+        self.currentLevelEntry.grid( row = 0, column = 1)
+        self.targetLevelLabel = ttk.Label(self.feature_frame, text = "The level you are trying to reach is: ")
+        self.targetLevelLabel.grid( row = 1 , column = 0, sticky = (E))
+        self.targetLevelEntry = ttk.Entry(self.feature_frame, textvariable = self.targetLVL)
+        self.targetLevelEntry.grid( row = 1 , column = 1)
+        #Make a "Calculate" Button here!!
+        self.maximumAmountLabel = ttk.Label(self.feature_frame, text = "The Maximum Amount is: ")
+        self.maximumAmountLabel.grid( row = 2, column = 0, sticky = (E) )
+        self.averageAmountLabel = ttk.Label(self.feature_frame, text = "The Average Amount is: ")
+        self.averageAmountLabel.grid( row = 3, column = 0, sticky = (E) )
+        self.minimumAmountLabel = ttk.Label(self.feature_frame, text = "The Minimum Amount is: ")
+        self.minimumAmountLabel.grid( row = 4, column = 0, sticky = (E) )
+
+
+    def lvlZeroExpCalc(self, target):
+        try:
+            neededExp = 0
+            if(target >= 0 and target <= 16):
+                neededExp = int((target ** 2) + (target * 6))
+                return neededExp
+            elif(target >= 17 and target <= 31):
+                neededExp = int((((target ** 2) * 2.5) - (target * 40.5)) + 360)
+                return neededExp
+            elif(target>= 32):
+                neededExp = int((((target ** 2) * 4.5) - (target * 162.5)) + 2220)
+                return neededExp
+        except ValueError:
+            pass
+
+   # def MinimumCalc(self):
+        
+#Begin this function calculation next time
+        
 
 
 
@@ -211,8 +273,10 @@ if __name__ == "__main__":
     app = StartApp()
     feature1 = FromLevelZero("Calculate From Level Zero")
     feature2 = GrindDuration("Grind Duration")
+    feature3 = BottleCounter("Bottle Counter")
     feature1.featureWindow.withdraw()
     feature2.featureWindow.withdraw()
+    feature3.featureWindow.withdraw()
 
     def switchBackAndClear(featureObject):
         app.switchBackMenu(featureObject.featureWindow)
@@ -226,17 +290,15 @@ if __name__ == "__main__":
     feature2.featureWindow.title(feature2.feature_title)
     app.menuButton1.config( text = feature1.feature_title, command = lambda : app.switchToNew(feature1.featureWindow))
     app.menuButton2.config( text = feature2.feature_title, command = lambda : app.switchToNew(feature2.featureWindow))
-    app.menuButton3.config( text = "???")
+    app.menuButton3.config( text = feature3.feature_title, command = lambda : app.switchToNew(feature3.featureWindow))
     feature1.backButton.config( command = lambda : switchBackAndClear(feature1))
     feature2.menuBackButton.config( command = lambda : switchBackAndClear(feature2))
-
-    #Figure out how to bind roots and toplevel objects
 
     #Start of the app
     app.root.mainloop()
 
 
     #print(font.families())  
-    # ^^^^^^^ Use this if you want to print the font familes th are stored on your computer
+    # ^^^^^^^ Use this if you want to print the font familes that are stored on your computer
    
     

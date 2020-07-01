@@ -5,6 +5,7 @@
 - [x] Make a feature that will calculate the total amount of exp needed to reach an inputted level starting from `Level 0` in the game
 - [ ] Allow the feature to be run using the `<Return>` key on the keyboard
 - [x] Make it so that when a button is pressed to go back to the main menu, that all of the entries are cleared.
-- [x] Make the program close when the "X" button in the top left window of the root menu has been closed.
+- [] Make the program close when the "X" button in the top left of a feature window has been closed (And the root menu window is already closed).
 - [x] Make the Label displaying the Grind Duration have a custom style and font color
+- [ ] Make the `Bottle Counter` feature use a moving gif instead of a still image
 
