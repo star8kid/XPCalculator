@@ -211,7 +211,7 @@ class BottleCounter():
 
         self.title_frame = ttk.Frame(self.featureWindow, padding = "50 10 50 0")
         self.feature3_font = font.Font( family = "System", size = 22 , weight = "bold")
-        self.title_label = ttk.Label(self.title_frame, text = "Bottle Counter", font = self.feature3_font, padding = "40 50 40 40")
+        self.title_label = ttk.Label(self.title_frame, text = "XP Bottle Counter", font = self.feature3_font, padding = "40 50 40 40")
         self.title_label.grid( row = 1 , column = 1)
         self.title_frame.pack()
         bottleOfEnchantingGIF = Image.open('C:/Users/Anthony/workspace/code_workspace/Python/XPCalculator/Images&Media/Bottle_Of_EnchantingGIF.gif')
@@ -224,9 +224,10 @@ class BottleCounter():
 
         self.currentLVL = StringVar()
         self.targetLVL = StringVar()
-        self.maximumAmountNum = " "
-        self.averageAmountNum = " "
-        self.minimumAmountNum = " "
+        self.exceptionOutput = " "
+        self.maximumAmountNum = StringVar()
+        self.averageAmountNum = StringVar()
+        self.minimumAmountNum = StringVar()
 
         self.currentLevelLabel = ttk.Label(self.feature_frame, text = "Your current level is: ")
         self.currentLevelLabel.grid( row = 0 , column = 0, sticky = (E))
@@ -236,13 +237,23 @@ class BottleCounter():
         self.targetLevelLabel.grid( row = 1 , column = 0, sticky = (E))
         self.targetLevelEntry = ttk.Entry(self.feature_frame, textvariable = self.targetLVL)
         self.targetLevelEntry.grid( row = 1 , column = 1)
-        #Make a "Calculate" Button here!!
+        self.exceptionErrorLabel = ttk.Label(self.feature_frame)
+        self.exceptionErrorLabel.grid( row = 2, column = 0)
+        self.calculateButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20, command = self.MinimumCalc)
+        self.calculateButton.grid( row = 2, column = 1)
         self.maximumAmountLabel = ttk.Label(self.feature_frame, text = "The Maximum Amount is: ")
-        self.maximumAmountLabel.grid( row = 2, column = 0, sticky = (E) )
+        self.maximumAmountLabel.grid( row = 3, column = 0, sticky = (E) )
         self.averageAmountLabel = ttk.Label(self.feature_frame, text = "The Average Amount is: ")
-        self.averageAmountLabel.grid( row = 3, column = 0, sticky = (E) )
+        self.averageAmountLabel.grid( row = 4, column = 0, sticky = (E) )
         self.minimumAmountLabel = ttk.Label(self.feature_frame, text = "The Minimum Amount is: ")
-        self.minimumAmountLabel.grid( row = 4, column = 0, sticky = (E) )
+        self.minimumAmountLabel.grid( row = 5, column = 0, sticky = (E) )
+        self.maximumAmountOutput = ttk.Label(self.feature_frame, textvariable = self.maximumAmountNum)
+        self.maximumAmountOutput.grid( row = 3, column = 1)
+        self.averageAmountOutput = ttk.Label(self.feature_frame, textvariable = self.averageAmountNum)
+        self.averageAmountOutput.grid( row = 4, column = 1)
+        self.minimumAmountOutput = ttk.Label(self.feature_frame, textvariable = self.minimumAmountNum)
+        self.maximumAmountOutput.grid( row = 5, column = 1)
+        
 
 
     def lvlZeroExpCalc(self, target):
@@ -259,21 +270,36 @@ class BottleCounter():
                 return neededExp
         except ValueError:
             pass
+    
+    
 
-   # def MinimumCalc(self):
-        
-#Begin this function calculation next time
-        
+    def MinimumCalc(self):
+        try:
+            print("This function runs!!")
+            self.minimumAmountNum.set("I have been set!!")
+            #Figure out how to use StringVar with all the outputed variables
+            target = float(self.targetLVL.get())
+            current = float(self.currentLVL.get())
+            expDiff = (self.lvlZeroExpCalc(target)) - (self.lvlZeroExpCalc(current))
+            minimumBottles = math.floor((expDiff / 11) + 1)
+            
+            self.exceptionOutput = " "
+            self.exceptionErrorLabel.configure( text = self.exceptionOutput)
+        except ValueError:
+            self.exceptionOutput = "Please input correct values!!"
+            self.exceptionErrorLabel.configure( text = self.exceptionOutput)
 
 
 
-if __name__ == "__main__":
+
+
+if (__name__ == "__main__"):
 
     #App initialization
     app = StartApp()
     feature1 = FromLevelZero("Calculate From Level Zero")
     feature2 = GrindDuration("Grind Duration")
-    feature3 = BottleCounter("Bottle Counter")
+    feature3 = BottleCounter("XP Bottle Counter")
     feature1.featureWindow.withdraw()
     feature2.featureWindow.withdraw()
     feature3.featureWindow.withdraw()
@@ -288,11 +314,13 @@ if __name__ == "__main__":
     app.root.title("XPCalculator")
     feature1.featureWindow.title(feature1.feature_title)
     feature2.featureWindow.title(feature2.feature_title)
+    feature3.featureWindow.title(feature3.feature_title)
     app.menuButton1.config( text = feature1.feature_title, command = lambda : app.switchToNew(feature1.featureWindow))
     app.menuButton2.config( text = feature2.feature_title, command = lambda : app.switchToNew(feature2.featureWindow))
     app.menuButton3.config( text = feature3.feature_title, command = lambda : app.switchToNew(feature3.featureWindow))
     feature1.backButton.config( command = lambda : switchBackAndClear(feature1))
     feature2.menuBackButton.config( command = lambda : switchBackAndClear(feature2))
+    
 
     #Start of the app
     app.root.mainloop()
