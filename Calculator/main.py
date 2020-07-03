@@ -7,7 +7,6 @@ from PIL import ImageTk, Image
 
 
 
-
 class StartApp():
     def __init__(self):
 
@@ -32,7 +31,6 @@ class StartApp():
         self.menuQuit.grid( row = 4, column = 1 , pady = self.padVerticalValue)
 
         # 2. The button configurations
-
 
         self.quitStyle = ttk.Style()
         self.quitStyle.configure("Quit.TButton", foreground = "dark red")
@@ -77,7 +75,7 @@ class FromLevelZero():
         self.levelEntry.grid( row = 2 , column = 1)
         self.neededExpLabel = ttk.Label(self.feature_frame, textvariable = self.totalNeededXPNum)
         self.neededExpLabel.grid( row = 3, column = 1, sticky = (W,E))
-        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", command = self.lvlZeroCalculate)
+        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", command = self.lvlZeroCalculate, width = 25)
         self.calcButton.grid( row = 4 , column = 1)
         self.backStyle = ttk.Style()
         self.backStyle.configure("Back.TButton", foreground = "systemHighlight")
@@ -154,8 +152,8 @@ class GrindDuration():
         self.fillerTextLabel.grid( row = 4 , column = 0 )
         self.backMenuStyle = ttk.Style()
         self.backMenuStyle.configure("Back.TButton", foreground = "systemHighlight")
-        self.menuBackButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", width = 20, style = "Back.TButton")
-        self.menuBackButton.grid( row = 5 , column = 1)
+        self.backButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", width = 20, style = "Back.TButton")
+        self.backButton.grid( row = 5 , column = 1)
 
     def resetEntries(self):
         self.currentLVL = " "
@@ -207,7 +205,7 @@ class BottleCounter():
     def __init__(self, feature_title):
         self.feature_title = feature_title
         self.featureWindow = Toplevel()
-        #Place binding key here
+        self.featureWindow.bind('<Return>', self.allCalc)
 
         self.title_frame = ttk.Frame(self.featureWindow, padding = "50 10 50 0")
         self.feature3_font = font.Font( family = "System", size = 22 , weight = "bold")
@@ -237,25 +235,29 @@ class BottleCounter():
         self.targetLevelLabel.grid( row = 1 , column = 0, sticky = (E))
         self.targetLevelEntry = ttk.Entry(self.feature_frame, textvariable = self.targetLVL)
         self.targetLevelEntry.grid( row = 1 , column = 1)
-        self.exceptionErrorLabel = ttk.Label(self.feature_frame)
+        self.exceptionStyle = ttk.Style()
+        self.exceptionStyle.configure("ExceptStyle.TLabel", foreground = "gold2")
+        self.exceptionErrorLabel = ttk.Label(self.feature_frame, style = "ExceptStyle.TLabel")
         self.exceptionErrorLabel.grid( row = 2, column = 0)
-        self.calculateButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20, command = self.MinimumCalc)
+        self.calculateButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20, command = self.allCalc)
         self.calculateButton.grid( row = 2, column = 1)
-        self.maximumAmountLabel = ttk.Label(self.feature_frame, text = "The Maximum Amount is: ")
+        self.maximumAmountLabel = ttk.Label(self.feature_frame, text = "The Maximum Amount of bottles needed is: ")
         self.maximumAmountLabel.grid( row = 3, column = 0, sticky = (E) )
-        self.averageAmountLabel = ttk.Label(self.feature_frame, text = "The Average Amount is: ")
+        self.averageAmountLabel = ttk.Label(self.feature_frame, text = "The Average Amount of bottles needed is: ")
         self.averageAmountLabel.grid( row = 4, column = 0, sticky = (E) )
-        self.minimumAmountLabel = ttk.Label(self.feature_frame, text = "The Minimum Amount is: ")
+        self.minimumAmountLabel = ttk.Label(self.feature_frame, text = "The Minimum Amount of bottles needed is: ")
         self.minimumAmountLabel.grid( row = 5, column = 0, sticky = (E) )
         self.maximumAmountOutput = ttk.Label(self.feature_frame, textvariable = self.maximumAmountNum)
         self.maximumAmountOutput.grid( row = 3, column = 1)
         self.averageAmountOutput = ttk.Label(self.feature_frame, textvariable = self.averageAmountNum)
         self.averageAmountOutput.grid( row = 4, column = 1)
         self.minimumAmountOutput = ttk.Label(self.feature_frame, textvariable = self.minimumAmountNum)
-        self.maximumAmountOutput.grid( row = 5, column = 1)
+        self.minimumAmountOutput.grid( row = 5, column = 1)
+        self.backMenuStyle = ttk.Style()
+        self.backMenuStyle.configure("BackStyle.TButton", foreground = "systemHighlight" )
+        self.backButton = ttk.Button(self.feature_frame, text = "Back to Main Menu", style = "BackStyle.TButton", width = 40)
+        self.backButton.grid( row = 6, column = 0)
         
-
-
     def lvlZeroExpCalc(self, target):
         try:
             neededExp = 0
@@ -271,26 +273,70 @@ class BottleCounter():
         except ValueError:
             pass
     
-    
-
     def MinimumCalc(self):
         try:
-            print("This function runs!!")
-            self.minimumAmountNum.set("I have been set!!")
-            #Figure out how to use StringVar with all the outputed variables
             target = float(self.targetLVL.get())
             current = float(self.currentLVL.get())
             expDiff = (self.lvlZeroExpCalc(target)) - (self.lvlZeroExpCalc(current))
+            if ( target < 0 or current < 0 or expDiff < 0 ):
+                raise TypeError
             minimumBottles = math.floor((expDiff / 11) + 1)
-            
+            self.minimumAmountNum.set(str(minimumBottles))
             self.exceptionOutput = " "
             self.exceptionErrorLabel.configure( text = self.exceptionOutput)
         except ValueError:
+            self.minimumAmountNum.set(" ")
             self.exceptionOutput = "Please input correct values!!"
             self.exceptionErrorLabel.configure( text = self.exceptionOutput)
+        except TypeError:
+            self.minimumAmountNum.set(" ")
+            self.exceptionOutput = "Please input logical values within range!!"
+            self.exceptionErrorLabel.configure( text = self.exceptionOutput)
 
+    def AverageCalc(self):
+        try:
+            target = float(self.targetLVL.get())
+            current = float(self.currentLVL.get())
+            expDiff = (self.lvlZeroExpCalc(target)) - (self.lvlZeroExpCalc(current))
+            if ( target < 0 or current < 0 or expDiff < 0 ):
+                raise TypeError
+            averageBottles = math.floor((expDiff / 7) + 1)
+            self.averageAmountNum.set(str(averageBottles))
+            self.exceptionOutput = " "
+            self.exceptionErrorLabel.configure( text = self.exceptionOutput)
+        except ValueError:
+            self.averageAmountNum.set(" ")
+        except TypeError:
+            self.averageAmountNum.set(" ")
+    
+    def MaximumCalc(self):
+        try:
+            target = float(self.targetLVL.get())
+            current = float(self.currentLVL.get())
+            expDiff = (self.lvlZeroExpCalc(target)) - (self.lvlZeroExpCalc(current))
+            if ( target < 0 or current < 0 or expDiff < 0 ):
+                raise TypeError
+            maximumBottles = math.floor((expDiff / 3) + 1)
+            self.maximumAmountNum.set(str(maximumBottles))
+            self.exceptionOutput = " "
+            self.exceptionErrorLabel.configure( text = self.exceptionOutput)
+        except ValueError:
+            self.maximumAmountNum.set(" ")
+        except TypeError:
+            self.maximumAmountNum.set(" ")
 
-
+    def allCalc(self, event = None):
+        self.MinimumCalc()
+        self.AverageCalc()
+        self.MaximumCalc()
+    
+    def resetEntries(self):
+        self.currentLVL.set(" ")
+        self.targetLVL.set(" ")
+        self.exceptionOutput = " "
+        self.minimumAmountNum.set(" ")
+        self.averageAmountNum.set(" ")
+        self.maximumAmountNum.set(" ")
 
 
 if (__name__ == "__main__"):
@@ -308,8 +354,6 @@ if (__name__ == "__main__"):
         app.switchBackMenu(featureObject.featureWindow)
         featureObject.resetEntries()
 
- 
-
     #Window Configurations
     app.root.title("XPCalculator")
     feature1.featureWindow.title(feature1.feature_title)
@@ -319,14 +363,8 @@ if (__name__ == "__main__"):
     app.menuButton2.config( text = feature2.feature_title, command = lambda : app.switchToNew(feature2.featureWindow))
     app.menuButton3.config( text = feature3.feature_title, command = lambda : app.switchToNew(feature3.featureWindow))
     feature1.backButton.config( command = lambda : switchBackAndClear(feature1))
-    feature2.menuBackButton.config( command = lambda : switchBackAndClear(feature2))
+    feature2.backButton.config( command = lambda : switchBackAndClear(feature2))
+    feature3.backButton.config( command = lambda : switchBackAndClear(feature3))
     
-
     #Start of the app
     app.root.mainloop()
-
-
-    #print(font.families())  
-    # ^^^^^^^ Use this if you want to print the font familes that are stored on your computer
-   
-    
