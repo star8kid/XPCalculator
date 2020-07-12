@@ -144,8 +144,8 @@ class GrindDuration():
         self.targetLvlEntry.grid( row = 1 , column = 1 )
         self.expGainRateEntry = ttk.Entry(self.feature_frame, textvariable = self.expGainRATE)
         self.expGainRateEntry.grid( row = 2 , column = 1 )
-        self.calculateButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20 ,command = self.grindDurationCalc)
-        self.calculateButton.grid( row = 3 , column = 1)
+        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20 ,command = self.grindDurationCalc)
+        self.calcButton.grid( row = 3 , column = 1)
         self.fillerLabelStyle = ttk.Style()
         self.fillerLabelStyle.configure("FillerInfo.TLabel", foreground = "green4")
         self.fillerTextLabel = ttk.Label(self.feature_frame, text = "According to our calculations....", width = 80, style = "FillerInfo.TLabel")
@@ -239,8 +239,8 @@ class BottleCounter():
         self.exceptionStyle.configure("ExceptStyle.TLabel", foreground = "gold2")
         self.exceptionErrorLabel = ttk.Label(self.feature_frame, style = "ExceptStyle.TLabel")
         self.exceptionErrorLabel.grid( row = 2, column = 0)
-        self.calculateButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20, command = self.allCalc)
-        self.calculateButton.grid( row = 2, column = 1)
+        self.calcButton = ttk.Button(self.feature_frame, text = "Calculate!", width = 20, command = self.allCalc)
+        self.calcButton.grid( row = 2, column = 1)
         self.maximumAmountLabel = ttk.Label(self.feature_frame, text = "The Maximum Amount of bottles needed is: ")
         self.maximumAmountLabel.grid( row = 3, column = 0, sticky = (E) )
         self.averageAmountLabel = ttk.Label(self.feature_frame, text = "The Average Amount of bottles needed is: ")
@@ -334,9 +334,11 @@ class BottleCounter():
         self.currentLVL.set(" ")
         self.targetLVL.set(" ")
         self.exceptionOutput = " "
+        self.exceptionErrorLabel.configure( text = self.exceptionOutput)
         self.minimumAmountNum.set(" ")
         self.averageAmountNum.set(" ")
         self.maximumAmountNum.set(" ")
+        
 
 
 if (__name__ == "__main__"):
