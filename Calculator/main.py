@@ -130,6 +130,8 @@ class GrindDuration():
         self.expGainRATE = StringVar()
         self.secondsDuration = " "
         self.minutesDuration = " "
+        self.SecondS = ""
+        self.MinuteS = ""
 
 
         self.currentLvlLabel = ttk.Label(self.feature_frame, text = "Your current level is: ")
@@ -178,6 +180,8 @@ class GrindDuration():
 
     def grindDurationCalc(self, event = None):
         try:
+            self.SecondS = ""
+            self.MinuteS = ""
             current = float(self.currentLvlEntry.get())
             target = float(self.targetLvlEntry.get())
             expRate = float(self.expGainRateEntry.get())
@@ -188,12 +192,18 @@ class GrindDuration():
             if( grossSecondsDuration > 60 ):
                 grossMinutesDuration = grossSecondsDuration // 60
                 fineSecondsDuration = grossSecondsDuration % 60
+                if(fineSecondsDuration > 1):
+                    self.SecondS = "s"
+                if(grossMinutesDuration > 1):
+                    self.MinuteS = "s"
                 self.secondsDuration = str(fineSecondsDuration)
                 self.minutesDuration = str(grossMinutesDuration)
-                self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.minutesDuration + " minute(s) and " + self.secondsDuration + " second(s)!")
+                self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.minutesDuration + " minute{0} and ".format(self.MinuteS) + self.secondsDuration + " second{0}!".format(self.SecondS))
             else:
+                if( grossSecondsDuration > 1 ):
+                    self.SecondS = "s" 
                 self.secondsDuration = str(grossSecondsDuration)
-                self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.secondsDuration + " second(s)!")
+                self.fillerTextLabel.configure( text = "According to our calculations, you need to grind for " + self.secondsDuration + " second{0}!".format(self.SecondS))
         except ValueError:
             self.fillerTextLabel.configure( text = "Please input correct numerical values!!")
             pass
