@@ -181,7 +181,7 @@ class GrindDuration():
             current = float(self.currentLvlEntry.get())
             target = float(self.targetLvlEntry.get())
             expRate = float(self.expGainRateEntry.get())
-            if( current < 0 or target < 0 or expRate < 0):
+            if( current < 0 or target < 0 or expRate < 0 or target < current):
                 raise TypeError
             expDifference = (self.lvlZeroExpCalc(target))  - (self.lvlZeroExpCalc(current))
             grossSecondsDuration = math.floor((expDifference /expRate) + 1)
