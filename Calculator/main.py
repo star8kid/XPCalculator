@@ -13,10 +13,13 @@ class StartApp():
         # 1. All the window and button definitions
         self.root = Tk()
         self.menu_window = ttk.Frame(self.root, padding = "100 10 100 10")
-        self.title_font = font.Font( family = "System", size = 18 , weight = "bold")
-        self.title_style = ttk.Style()
-        self.title_style.configure("TitleLabel.TLabel", foreground = "ForestGreen")
-        self.title_label = ttk.Label(self.menu_window, text = "XP Calculator", style = "TitleLabel.TLabel", font = self.title_font, padding = "5 20 5 50")
+        
+        # - Code for placing the Application Title Image
+        self.raw_title_image = Image.open('C:/Users/Anthony/workspace/code_workspace/Python/XPCalculator/Images&Media/Title_Image.png')
+        self.zoom = 0.25
+        pixels_x, pixels_y = tuple([int(self.zoom * x)  for x in self.raw_title_image.size])
+        self.title_image = ImageTk.PhotoImage(self.raw_title_image.resize(( pixels_x , pixels_y)))
+        self.title_label = ttk.Label(self.menu_window,  image = self.title_image)
         self.title_label.grid(row = 0 , column = 1)
 
         self.padVerticalValue = 3
