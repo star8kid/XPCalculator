@@ -93,8 +93,7 @@ class FromLevelZero():
     def lvlZeroCalculate(self, event = None):
         try:
             target = float(self.levelEntry.get())
-            if( target < 0):
-                raise ValueError
+            assert( target > 0)
             neededExp = 0
             if(target >= 0 and target <= 16):
                 neededExp = int((target ** 2) + (target * 6))
@@ -106,7 +105,10 @@ class FromLevelZero():
                 neededExp = int((((target ** 2) * 4.5) - (target * 162.5)) + 2220)
                 self.totalNeededXPNum.set(str(neededExp))
         except ValueError:
-            self.totalNeededXPNum.set("Please input a correct value!")
+            self.totalNeededXPNum.set("Please input a number value!")
+            pass
+        except AssertionError:
+            self.totalNeededXPNum.set("Please input a positive value!")
             pass
 
 
@@ -188,8 +190,7 @@ class GrindDuration():
             current = float(self.currentLvlEntry.get())
             target = float(self.targetLvlEntry.get())
             expRate = float(self.expGainRateEntry.get())
-            if( current < 0 or target < 0 or expRate < 0 or target < current):
-                raise TypeError
+            assert((current > 0) and (target > 0) and (expRate > 0) and (target > current))
             expDifference = (self.lvlZeroExpCalc(target))  - (self.lvlZeroExpCalc(current))
             grossSecondsDuration = math.floor((expDifference /expRate) + 1)
             if( grossSecondsDuration > 60 ):
@@ -210,7 +211,7 @@ class GrindDuration():
         except ValueError:
             self.fillerTextLabel.configure( text = "Please input correct numerical values!!")
             pass
-        except TypeError:
+        except AssertionError:
             self.fillerTextLabel.configure( text = "Put in numbers that fit within the level range logically!!")
             pass
 
@@ -290,9 +291,9 @@ class BottleCounter():
         try:
             target = float(self.targetLVL.get())
             current = float(self.currentLVL.get())
+            assert((target > 0) and (current > 0))
             expDiff = (self.lvlZeroExpCalc(target)) - (self.lvlZeroExpCalc(current))
-            if ( target < 0 or current < 0 or expDiff < 0 ):
-                raise TypeError
+            assert(expDiff > 0)
             minimumBottles = math.floor((expDiff / 11) + 1)
             self.minimumAmountNum.set(str(minimumBottles))
             self.exceptionOutput = " "
@@ -301,7 +302,7 @@ class BottleCounter():
             self.minimumAmountNum.set(" ")
             self.exceptionOutput = "Please input correct values!!"
             self.exceptionErrorLabel.configure( text = self.exceptionOutput)
-        except TypeError:
+        except AssertionError:
             self.minimumAmountNum.set(" ")
             self.exceptionOutput = "Please input logical values within range!!"
             self.exceptionErrorLabel.configure( text = self.exceptionOutput)
@@ -310,32 +311,32 @@ class BottleCounter():
         try:
             target = float(self.targetLVL.get())
             current = float(self.currentLVL.get())
+            assert((target > 0) and (current > 0))
             expDiff = (self.lvlZeroExpCalc(target)) - (self.lvlZeroExpCalc(current))
-            if ( target < 0 or current < 0 or expDiff < 0 ):
-                raise TypeError
+            assert(expDiff > 0)
             averageBottles = math.floor((expDiff / 7) + 1)
             self.averageAmountNum.set(str(averageBottles))
             self.exceptionOutput = " "
             self.exceptionErrorLabel.configure( text = self.exceptionOutput)
         except ValueError:
             self.averageAmountNum.set(" ")
-        except TypeError:
+        except AssertionError:
             self.averageAmountNum.set(" ")
     
     def MaximumCalc(self):
         try:
             target = float(self.targetLVL.get())
             current = float(self.currentLVL.get())
+            assert((target > 0) and (current > 0))
             expDiff = (self.lvlZeroExpCalc(target)) - (self.lvlZeroExpCalc(current))
-            if ( target < 0 or current < 0 or expDiff < 0 ):
-                raise TypeError
+            assert(expDiff > 0)
             maximumBottles = math.floor((expDiff / 3) + 1)
             self.maximumAmountNum.set(str(maximumBottles))
             self.exceptionOutput = " "
             self.exceptionErrorLabel.configure( text = self.exceptionOutput)
         except ValueError:
             self.maximumAmountNum.set(" ")
-        except TypeError:
+        except AssertionError:
             self.maximumAmountNum.set(" ")
 
     def allCalc(self, event = None):

@@ -8,4 +8,4 @@
 - [ ] Make the program close when the "X" button in the top left of a feature window has been closed (And the root menu window is already closed).
 - [x] Make the Label displaying the Grind Duration have a custom style and font color
 - [ ] Make the `Bottle Counter` feature use a moving gif instead of a still image
-
+- [ ] Make a button that will take the user to a website that shows how much experience each mob drops
